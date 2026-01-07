@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechTorun - Creative Web Solutions</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="icon" href="assets/img/portfolio-logo.png" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6366f1",
+              dark: "#0f172a",
+              light: "#f8fafc",
+            },
+            animation: {
+              "fade-in": "fadeIn 1s ease-in-out",
+              "slide-up": "slideUp 0.8s ease-out",
+              "scale-in": "scaleIn 0.5s ease-out",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { transform: "translateY(50px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              scaleIn: {
+                "0%": { transform: "scale(0.9)", opacity: "0" },
+                "100%": { transform: "scale(1)", opacity: "1" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+      }
+      .gradient-text {
+        background: linear-gradient(90deg, #6366f1, #a855f7);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .nav-link {
+        position: relative;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background-color: #6366f1;
+        transition: width 0.3s ease;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .service-card:hover .service-icon {
+        transform: rotateY(180deg);
+      }
+      .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease-out;
+      }
+      .animate-on-scroll.animated {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .project-card {
+        perspective: 1000px;
+      }
+      .project-card-inner {
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+      }
+      .project-card:hover .project-card-inner {
+        transform: rotateY(180deg);
+      }
+      .project-card-front,
+      .project-card-back {
+        backface-visibility: hidden;
+      }
+      .project-card-back {
+        transform: rotateY(180deg);
+      }
+    </style>
+  </head>
+  <body class="bg-dark text-light">
+    <!-- Header/Navigation -->
+    <header
+      class="fixed w-full z-50 bg-dark/90 backdrop-blur-sm border-b border-gray-800"
+    >
+      <div class="container mx-auto px-6 py-4">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-2">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+            >
+              <span class="text-xl font-bold"
+                ><img src="assets/img/portfolio-logo.png" alt=""
+              /></span>
+            </div>
+            <span class="text-xl font-bold gradient-text">TechTorun</span>
+          </div>
+          <nav class="hidden md:flex space-x-8">
+            <a href="#home" class="nav-link font-medium">Home</a>
+            <a href="#services" class="nav-link font-medium">Services</a>
+            <a href="#projects" class="nav-link font-medium">Projects</a>
+            <a href="#team" class="nav-link font-medium">Team</a>
+            <a href="#contact" class="nav-link font-medium">Contact</a>
+          </nav>
+          <!-- <div class="flex items-center space-x-4">
+            <button
+              id="theme-toggle"
+              class="p-2 rounded-full hover:bg-gray-800 transition"
+            >
+              <i class="fas fa-moon text-xl"></i>
+            </button>
+            <button class="md:hidden" id="mobile-menu-button">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div> -->
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden bg-dark border-t border-gray-800"
+      >
+        <div class="container mx-auto px-6 py-4 flex flex-col space-y-4">
+          <a href="#home" class="nav-link font-medium">Home</a>
+          <a href="#services" class="nav-link font-medium">Services</a>
+          <a href="#projects" class="nav-link font-medium">Projects</a>
+          <a href="#team" class="nav-link font-medium">Team</a>
+          <a href="#contact" class="nav-link font-medium">Contact</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-20">
+      <div class="container mx-auto px-6 py-20">
+        <div class="flex flex-col md:flex-row items-center">
+          <div class="md:w-1/2 mb-12 md:mb-0 animate-on-scroll">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+              We Create
+              <span class="gradient-text">Digital Experiences</span> That Matter
+            </h1>
+            <p class="text-lg text-gray-400 mb-8">
+              TechTorun is a creative agency specializing in web development,
+              SEO, and graphic design. We help businesses establish their
+              digital presence with stunning designs and cutting-edge
+              technology.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#contact"
+                class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition transform hover:scale-105"
+              >
+                Get Started
+              </a>
+              <a
+                href="#projects"
+                class="border border-primary text-primary hover:bg-primary/10 px-6 py-3 rounded-lg font-medium transition transform hover:scale-105"
+              >
+                View Work
+              </a>
+            </div>
+          </div>
+          <div class="md:w-1/2 animate-on-scroll">
+            <div class="relative">
+              <div
+                class="w-full h-full bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-2xl overflow-hidden relative"
+              >
+                <div class="inset-10 flex items-center justify-center">
+                  <div class="h-full w-full overflow-hidden animate-pulse">
+                    <img
+                      src="/assets/img/rising-sun-analysis-high.png"
+                      alt="Online Shoe Store"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500/30 rounded-2xl -z-10 animate-spin-slow"
+              ></div>
+              <div
+                class="absolute -top-10 -left-10 w-24 h-24 bg-primary/30 rounded-full -z-10 animate-pulse"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="py-12 bg-slate-900/50">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12 animate-on-scroll">
+          <h2 class="text-2xl md:text-3xl font-bold mb-4">Our Partners</h2>
+          <div class="w-20 h-1 bg-primary mx-auto"></div>
+        </div>
+        <div
+          class="flex flex-wrap justify-center items-center gap-8 animate-on-scroll"
+        >
+          <a
+            href="https://www.facebook.com/profile.php?id=61581607657243"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center space-x-4 bg-gray-800/50 hover:bg-primary/80 px-8 py-4 rounded-lg group transition transform hover:scale-105 shadow-lg"
+            style="text-decoration: none"
+          >
+            <img
+              src="assets/img/rising-sun-logo.png"
+              alt="Rising Sun School and College Logo"
+              class="w-12 h-12 rounded-full border-2 border-primary group-hover:scale-110 transition-transform duration-300 bg-white object-cover"
+              onerror="this.onerror=null;this.src='https://scontent.fdac183-1.fna.fbcdn.net/v/t39.30808-6/557616642_122098057401053588_1961777291948443580_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEgm5gidOi1dbCKuUG0KsACIxHaa5IDDPIjEdprkgMM8jTmNfwvq5oX-PJWJXbM-y5_TGdIqYMFTcEXEZkGqGiQ&_nc_ohc=9-tqubrH7yIQ7kNvwFznWAu&_nc_oc=Adnm5E2Bw7STValjhPaxkUNV_oUZQqnVfSZFWOVBkPRJKJhu4GJm5IbNZYMTwSRG0q8&_nc_zt=23&_nc_ht=scontent.fdac183-1.fna&_nc_gid=n8l1J0wUUgUNLeqWvuq6eQ&oh=00_AfqVgTVHFHHqunsPlLB1yFp24qJfMyFxhiv8DxexZ7vPVw&oe=6963E76C';"
+            />
+            <span class="flex flex-col">
+              <span
+                class="text-xl md:text-2xl font-bold gradient-text group-hover:underline"
+              >
+                Rising Sun School and College
+              </span>
+              <span
+                class="text-sm text-gray-300 mt-1 font-medium group-hover:text-white"
+              >
+                Our Leading Education Partner
+              </span>
+            </span>
+            <i
+              class="fab fa-facebook-square text-primary text-2xl ml-2 group-hover:text-white transition"
+              aria-hidden="true"
+            ></i>
+          </a>
+          <!-- Add more partners as needed -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+          <h2 class="text-2xl md:text-4xl font-bold mb-4">
+            Our <span class="gradient-text">Services</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">
+            We offer comprehensive digital solutions to help your business
+            thrive in the online world.
+          </p>
+          <div class="w-20 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Service 1 -->
+          <div
+            class="bg-gray-800/50 rounded-xl p-6 card-hover animate-on-scroll"
+          >
+            <div
+              class="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center mb-6 service-icon transition-transform duration-500"
+            >
+              <i class="fas fa-code text-2xl text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Web Development</h3>
+            <p class="text-gray-400">
+              Custom, responsive websites built with modern technologies to
+              ensure performance and scalability.
+            </p>
+          </div>
+          <!-- Service 2 -->
+          <div
+            class="bg-gray-800/50 rounded-xl p-6 card-hover animate-on-scroll"
+          >
+            <div
+              class="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center mb-6 service-icon transition-transform duration-500"
+            >
+              <i class="fas fa-search-dollar text-2xl text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">SEO Optimization</h3>
+            <p class="text-gray-400">
+              Improve your search rankings and drive organic traffic with our
+              comprehensive SEO strategies.
+            </p>
+          </div>
+          <!-- Service 3 -->
+          <div
+            class="bg-gray-800/50 rounded-xl p-6 card-hover animate-on-scroll"
+          >
+            <div
+              class="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center mb-6 service-icon transition-transform duration-500"
+            >
+              <i class="fas fa-paint-brush text-2xl text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Graphic Design</h3>
+            <p class="text-gray-400">
+              Stunning visual designs that communicate your brand message
+              effectively and attract customers.
+            </p>
+          </div>
+          <!-- Service 4 -->
+          <div
+            class="bg-gray-800/50 rounded-xl p-6 card-hover animate-on-scroll"
+          >
+            <div
+              class="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center mb-6 service-icon transition-transform duration-500"
+            >
+              <i class="fas fa-laptop-code text-2xl text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Web Design</h3>
+            <p class="text-gray-400">
+              User-centric designs that provide seamless experiences and convert
+              visitors into customers.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-slate-900/50">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+          <h2 class="text-2xl md:text-4xl font-bold mb-4">
+            Our <span class="gradient-text">Projects</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">
+            Explore our portfolio of successful projects that showcase our
+            expertise and creativity.
+          </p>
+          <div class="w-20 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+
+        <!-- Project Tabs -->
+        <div class="mb-8 flex justify-center animate-on-scroll">
+          <div class="inline-flex rounded-lg bg-gray-800 p-1">
+            <button
+              class="project-tab active px-4 py-2 rounded-md font-medium"
+              data-category="all"
+            >
+              All
+            </button>
+            <button
+              class="project-tab px-4 py-2 rounded-md font-medium"
+              data-category="mini"
+            >
+              Mini Projects
+            </button>
+            <button
+              class="project-tab px-4 py-2 rounded-md font-medium"
+              data-category="industrial"
+            >
+              Industrial
+            </button>
+          </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Project: Ecommerce Website 1 -->
+          <div
+            class="project-card animate-on-scroll"
+            data-category="industrial"
+          >
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/ecommerce.png"
+                    alt="Ecommerce Website 1"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Ecommerce Website 1</h3>
+                  <p class="text-gray-400 mb-4">
+                    A responsive ecommerce site with product listing and UI.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Industrial Website</span>
+                    <a
+                      href="https://ecommerce-moheb.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Ecommerce Website 1
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Built with modern UI and responsive product listing interface
+                  for online shopping.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://ecommerce-moheb.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: ICICT4SD Conference Website -->
+          <div
+            class="project-card animate-on-scroll"
+            data-category="industrial"
+          >
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/icict4sd.png"
+                    alt="ICICT4SD Conference Website"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">
+                    ICICT4SD Conference Website
+                  </h3>
+                  <p class="text-gray-400 mb-4">
+                    Event website for ICICT4SD conference with dynamic updates.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Industrial Website</span>
+                    <a
+                      href="https://icict4sd.vercel.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  ICICT4SD Conference Website
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Dynamic conference website for event information, schedules,
+                  and paper submissions.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://icict4sd.vercel.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: BUP Leave Register -->
+          <div
+            class="project-card animate-on-scroll"
+            data-category="industrial"
+          >
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/leave-register.png"
+                    alt="BUP Leave Register"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">BUP Leave Register</h3>
+                  <p class="text-gray-400 mb-4">
+                    Manage staff leave applications digitally with ease.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Industrial Website</span>
+                    <a
+                      href="https://bup-leave-register.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  BUP Leave Register
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Platform to track and manage leave applications of university
+                  staff members.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://bup-leave-register.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Project: Netflix Clone -->
+          <div
+            class="project-card animate-on-scroll"
+            data-category="industrial"
+          >
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/netflix-clone.png"
+                    alt="Netflix Clone"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Netflix Clone</h3>
+                  <p class="text-gray-400 mb-4">
+                    Streaming UI built with Netflix-like interface and login
+                    demo.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Industrial Website</span>
+                    <a
+                      href="https://cheery-concha-df5341.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">Netflix Clone</h3>
+                <p class="text-white/90 mb-4">
+                  Login Demo → <strong>testmail@gmail.com</strong> /
+                  <strong>Test12345</strong>. Built for video streaming UI
+                  simulation.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://cheery-concha-df5341.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: Online Shoe Store -->
+          <div
+            class="project-card animate-on-scroll"
+            data-category="industrial"
+          >
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/shoe-store.png"
+                    alt="Online Shoe Store"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Online Shoe Store</h3>
+                  <p class="text-gray-400 mb-4">
+                    Stylish online shoe store built in Next.js with modern
+                    e-commerce features.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Industrial Website</span>
+                    <a
+                      href="https://shoe-store-client-nextjs.vercel.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Online Shoe Store
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Responsive e-commerce platform for selling shoes with cart,
+                  checkout, and modern UI.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://shoe-store-client-nextjs.vercel.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: Rising Sun School Student Survey and Analysis -->
+          <div
+            class="project-card animate-on-scroll"
+            data-category="industrial"
+          >
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/rising-sun-survey.png"
+                    alt="Rising Sun School Survey"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">
+                    Rising Sun School Survey
+                  </h3>
+                  <p class="text-gray-400 mb-4">
+                    Survey and data analysis for student addiction prevention.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Industrial Website</span>
+                    <a
+                      href="https://rising-sun-school-survey.netlify.app/data"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Rising Sun School Survey
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Supabase-based survey and analytics platform for monitoring
+                  student digital behavior and addiction symptoms.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://rising-sun-school-survey.netlify.app/data"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Project: Brazil Flag Animation -->
+          <!-- <div class="project-card animate-on-scroll" data-category="mini">
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/brazil-flag.png"
+                    alt="Brazil Flag Animation"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Brazil Flag Animation</h3>
+                  <p class="text-gray-400 mb-4">
+                    A beautiful animation of the Brazilian flag created with
+                    CSS.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Mini Project</span>
+                    <a
+                      href="https://storied-nougat-e3540a.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Brazil Flag Animation
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Pure CSS animation showcasing the Brazilian flag with smooth
+                  transitions.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://storied-nougat-e3540a.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- Project: Will You ? -->
+          <div class="project-card animate-on-scroll" data-category="mini">
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/Will You.png"
+                    alt="Will You ?"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Will You ?</h3>
+                  <p class="text-gray-400 mb-4">
+                    A cute interactive love proposal styled with animations.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Mini Project</span>
+                    <a
+                      href="https://bubu-dudu-valentine.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">Will You ?</h3>
+                <p class="text-white/90 mb-4">
+                  A sweet and fun valentine proposal app made with HTML, CSS,
+                  and JavaScript.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://bubu-dudu-valentine.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: Income Expense Tracker -->
+          <div class="project-card animate-on-scroll" data-category="mini">
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/income-expense.png"
+                    alt="Income Expense Tracker"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Income Expense Tracker</h3>
+                  <p class="text-gray-400 mb-4">
+                    Track your income and expenses with React + TypeScript.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Mini Project</span>
+                    <a
+                      href="https://income-expense-tracker-vite-react-ts.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Income Expense Tracker
+                </h3>
+                <p class="text-white/90 mb-4">
+                  A financial tracker built using Vite, React, and TypeScript.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://income-expense-tracker-vite-react-ts.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: Simple Bank Functionalities -->
+          <div class="project-card animate-on-scroll" data-category="mini">
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/bank-app.png"
+                    alt="Simple Bank Functionalities"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">
+                    Simple Bank Functionalities
+                  </h3>
+                  <p class="text-gray-400 mb-4">
+                    Simulates basic banking operations using JavaScript.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Mini Project</span>
+                    <a
+                      href="https://stunning-gumdrop-bac31d.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Simple Bank Functionalities
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Functional banking UI with deposit, withdraw and balance
+                  logic.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://stunning-gumdrop-bac31d.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Project: Product Cart Functionalities -->
+          <div class="project-card animate-on-scroll" data-category="mini">
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/product-cart.png"
+                    alt="Product Cart Functionalities"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">
+                    Product Cart Functionalities
+                  </h3>
+                  <p class="text-gray-400 mb-4">
+                    Simple e-commerce cart built with Next.js.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Mini Project</span>
+                    <a
+                      href="https://product-cart-nextjs.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Product Cart Functionalities
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Implements product listing and cart logic using React in
+                  Next.js.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://product-cart-nextjs.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: Live Search Based Temparature App -->
+          <div class="project-card animate-on-scroll" data-category="mini">
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/temperature-app.png"
+                    alt="Live Search Based Temperature App"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">
+                    Live Search Based Temparature App
+                  </h3>
+                  <p class="text-gray-400 mb-4">
+                    Live weather search using public API.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Mini Project</span>
+                    <a
+                      href="https://temparature-api.netlify.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">
+                  Live Search Based Temparature App
+                </h3>
+                <p class="text-white/90 mb-4">
+                  Built with vanilla JS to display temperature by city name
+                  using real-time APIs.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://temparature-api.netlify.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project: Todo App -->
+          <div class="project-card animate-on-scroll" data-category="mini">
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/todo-app.png"
+                    alt="Todo App"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Todo App</h3>
+                  <p class="text-gray-400 mb-4">
+                    Manage daily tasks with a simple todo app in Next.js.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Mini Project</span>
+                    <a
+                      href="https://todo-app-nextjs-self.vercel.app/"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">Todo App</h3>
+                <p class="text-white/90 mb-4">
+                  A Next.js based productivity app to add, check, and delete
+                  tasks with smooth UX.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://todo-app-nextjs-self.vercel.app/"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Project: Blog Website -->
+          <div
+            class="project-card animate-on-scroll"
+            data-category="industrial"
+          >
+            <div class="project-card-inner h-full">
+              <div
+                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+              >
+                <div class="h-48 w-full overflow-hidden">
+                  <img
+                    src="assets/img/Blog Website.png"
+                    alt="Blog Website"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="p-6">
+                  <h3 class="text-xl font-bold mb-2">Blog Website</h3>
+                  <p class="text-gray-400 mb-4">
+                    A modern blog site using Next.js 13.
+                  </p>
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm text-primary">Industrial Website</span>
+                    <a
+                      href="https://blog-website-nextjs13-4-module12.vercel.app/Blog"
+                      target="_blank"
+                      class="text-sm font-medium hover:text-primary transition"
+                      >View Live</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+              >
+                <h3 class="text-xl font-bold mb-2 text-white">Blog Website</h3>
+                <p class="text-white/90 mb-4">
+                  Feature-rich blog website with modern routing and modular
+                  design using Next.js 13.
+                </p>
+                <div class="mt-auto">
+                  <a
+                    href="https://blog-website-nextjs13-4-module12.vercel.app/Blog"
+                    target="_blank"
+                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
+                    >Visit Project</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-20">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+          <h2 class="text-2xl md:text-4xl font-bold mb-4">
+            Our <span class="gradient-text">Team</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">
+            Meet the talented individuals behind TechTorun who make digital
+            magic happen.
+          </p>
+          <div class="w-20 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Team Member 1 -->
+          <div
+            class="bg-gray-800/50 rounded-xl p-6 text-center card-hover animate-on-scroll"
+          >
+            <div
+              class="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center text-4xl font-bold"
+            >
+              SH
+            </div>
+            <h3 class="text-xl font-bold mb-2">Saeed Hossain Moheb</h3>
+            <p class="text-primary mb-4">
+              Full Stack Web Developer and SEO Expert
+            </p>
+            <p class="text-gray-400 mb-4">
+              Expert in building scalable web applications and optimizing them
+              for search engines.
+            </p>
+            <a
+              href="https://www.linkedin.com/in/moheb619/"
+              target="_blank"
+              class="inline-block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition"
+            >
+              <i class="fab fa-linkedin mr-2"></i> Connect
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16 animate-on-scroll">
+          <h2 class="text-2xl md:text-4xl font-bold mb-4">
+            Get In <span class="gradient-text">Touch</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto">
+            Ready to start your project? Contact us today and let's create
+            something amazing together.
+          </p>
+          <div class="w-20 h-1 bg-primary mx-auto mt-4"></div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-12">
+          <!-- <div class="lg:w-1/2 animate-on-scroll">
+            <form class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="name" class="block text-sm font-medium mb-2"
+                    >Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="block text-sm font-medium mb-2"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Your email"
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="subject" class="block text-sm font-medium mb-2"
+                  >Subject</label
+                >
+                <input
+                  type="text"
+                  id="subject"
+                  class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="Subject"
+                />
+              </div>
+              <div>
+                <label for="message" class="block text-sm font-medium mb-2"
+                  >Message</label
+                >
+                <textarea
+                  id="message"
+                  rows="5"
+                  class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="Your message"
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition transform hover:scale-[1.02]"
+              >
+                Send Message
+              </button>
+            </form>
+          </div> -->
+          <div class="lg:w-90 mx-auto animate-on-scroll">
+            <div class="lg:w-full animate-on-scroll">
+              <div class="bg-gray-800/50 rounded-xl p-8 h-full">
+                <h3 class="text-xl font-bold mb-6 text-center">
+                  Contact Information
+                </h3>
+                <div
+                  class="flex flex-col md:flex-row flex-wrap gap-8 justify-center items-center md:items-start mt-10"
+                >
+                  <!-- Email Section -->
+                  <div
+                    class="flex items-start w-full md:w-auto md:min-w-[300px]"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 mt-1"
+                    >
+                      <i class="fas fa-envelope text-primary"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-medium mb-1">Email</h4>
+                      <p class="text-gray-400">6moheb19@gmail.com</p>
+                    </div>
+                  </div>
+
+                  <!-- Phone Section -->
+                  <div
+                    class="flex items-start w-full md:w-auto md:min-w-[300px]"
+                  >
+                    <div
+                      class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-4 mt-1"
+                    >
+                      <i class="fas fa-phone-alt text-primary"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-medium mb-1">Phone</h4>
+                      <p class="text-gray-400">+8801571361404</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-900/50 border-t border-gray-800">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center space-x-2 mb-6 md:mb-0">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+            >
+              <span class="text-xl font-bold"
+                ><img src="assets/img/portfolio-logo.png" alt=""
+              /></span>
+            </div>
+            <span class="text-lg font-bold gradient-text">TechTorun</span>
+          </div>
+          <div class="text-center md:text-right">
+            <p class="text-gray-400 mb-2">
+              © 2025 TechTorun. All rights reserved.
+            </p>
+            <p class="text-gray-500 text-sm">
+              <a
+                href="https://www.facebook.com/profile.php?id=61581607657243"
+                target="_blank"
+                class="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/30 hover:shadow-lg transition-all duration-300 font-semibold text-primary group"
+                style="text-decoration: none"
+              >
+                <img
+                  src="assets/img/rising-sun-logo.png"
+                  alt="Rising Sun School Logo"
+                  class="w-8 h-8 rounded-full border-2 border-primary group-hover:scale-110 transition-transform duration-300 mr-2"
+                  onerror="this.onerror=null;this.src='https://scontent.fdac183-1.fna.fbcdn.net/v/t39.30808-6/557616642_122098057401053588_1961777291948443580_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEgm5gidOi1dbCKuUG0KsACIxHaa5IDDPIjEdprkgMM8jTmNfwvq5oX-PJWJXbM-y5_TGdIqYMFTcEXEZkGqGiQ&_nc_ohc=9-tqubrH7yIQ7kNvwFznWAu&_nc_oc=Adnm5E2Bw7STValjhPaxkUNV_oUZQqnVfSZFWOVBkPRJKJhu4GJm5IbNZYMTwSRG0q8&_nc_zt=23&_nc_ht=scontent.fdac183-1.fna&_nc_gid=n8l1J0wUUgUNLeqWvuq6eQ&oh=00_AfqVgTVHFHHqunsPlLB1yFp24qJfMyFxhiv8DxexZ7vPVw&oe=6963E76C';"
+                />
+                <span class="gradient-text group-hover:underline">
+                  Rising Sun School and College
+                </span>
+                <i
+                  class="fab fa-facebook-square text-primary text-xl ml-1 group-hover:text-blue-800"
+                ></i>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      $("#mobile-menu-button").click(function () {
+        $("#mobile-menu").slideToggle();
+      });
+
+      // Theme toggle
+      $("#theme-toggle").click(function () {
+        $("html").toggleClass("dark");
+        if ($("html").hasClass("dark")) {
+          $("#theme-toggle").html('<i class="fas fa-sun text-xl"></i>');
+        } else {
+          $("#theme-toggle").html('<i class="fas fa-moon text-xl"></i>');
+        }
+      });
+
+      // Initialize Swiper
+      var testimonialSwiper = new Swiper(".testimonialSwiper", {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: 2,
+          },
+          1024: {
+            slidesPerView: 3,
+          },
+        },
+      });
+
+      // Project tabs
+      $(".project-tab").click(function () {
+        $(".project-tab").removeClass("active bg-primary text-white");
+        $(this).addClass("active bg-primary text-white");
+
+        const category = $(this).data("category");
+
+        if (category === "all") {
+          $(".project-card").fadeIn();
+        } else {
+          $(".project-card").hide();
+          $(`.project-card[data-category="${category}"]`).fadeIn();
+        }
+      });
+
+      // Smooth scrolling for anchor links
+      $('a[href*="#"]').on("click", function (e) {
+        e.preventDefault();
+
+        $("html, body").animate(
+          {
+            scrollTop: $($(this).attr("href")).offset().top - 80,
+          },
+          500,
+          "linear"
+        );
+      });
+
+      // Scroll animation
+      function animateOnScroll() {
+        const elements = document.querySelectorAll(".animate-on-scroll");
+
+        elements.forEach((element) => {
+          const elementPosition = element.getBoundingClientRect().top;
+          const screenPosition = window.innerHeight / 1.2;
+
+          if (elementPosition < screenPosition) {
+            element.classList.add("animated");
+          }
+        });
+      }
+
+      window.addEventListener("scroll", animateOnScroll);
+      animateOnScroll(); // Run once on page load
+
+      // Add hover effect to project cards
+      $(".project-card").hover(
+        function () {
+          $(this)
+            .find(".project-card-inner")
+            .css("transform", "rotateY(180deg)");
+        },
+        function () {
+          $(this).find(".project-card-inner").css("transform", "rotateY(0deg)");
+        }
+      );
+    </script>
+  </body>
+</html>
