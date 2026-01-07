@@ -16,39 +16,141 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <!-- GSAP & ScrollTrigger -->
     <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              primary: "#6366f1",
-              dark: "#0f172a",
-              light: "#f8fafc",
-            },
-            animation: {
-              "fade-in": "fadeIn 1s ease-in-out",
-              "slide-up": "slideUp 0.8s ease-out",
-              "scale-in": "scaleIn 0.5s ease-out",
-            },
-            keyframes: {
-              fadeIn: {
-                "0%": { opacity: "0" },
-                "100%": { opacity: "1" },
-              },
-              slideUp: {
-                "0%": { transform: "translateY(50px)", opacity: "0" },
-                "100%": { transform: "translateY(0)", opacity: "1" },
-              },
-              scaleIn: {
-                "0%": { transform: "scale(0.9)", opacity: "0" },
-                "100%": { transform: "scale(1)", opacity: "1" },
-              },
-            },
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* =============================
+         GLOBAL SCROLL SMOOTHING
+      ============================== */
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+      });
+
+      /* =============================
+         HERO ENTRANCE
+      ============================== */
+      gsap.from("header", {
+        y: -100,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power4.out",
+      });
+
+      gsap.from(".hero-content > *", {
+        y: 60,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 1,
+        ease: "power3.out",
+      });
+
+      gsap.from(".hero-visual", {
+        scale: 0.9,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out",
+      });
+
+      /* =============================
+         PARALLAX EFFECTS
+      ============================== */
+      gsap.utils.toArray(".parallax").forEach((el) => {
+        gsap.to(el, {
+          yPercent: -30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
           },
+        });
+      });
+
+      gsap.to(".hero-visual img", {
+        yPercent: 15,
+        scrollTrigger: {
+          trigger: "#home",
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
         },
-      };
+      });
+
+      /* =============================
+         SECTION REVEALS
+      ============================== */
+      gsap.utils.toArray(".reveal").forEach((el) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 60 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+
+      /* =============================
+         PROJECT CARD STAGGER
+      ============================== */
+      gsap.from(".project-card", {
+        opacity: 0,
+        y: 80,
+        scale: 0.95,
+        stagger: 0.12,
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#projects",
+          start: "top 70%",
+        },
+      });
+
+      /* =============================
+         FLOATING ORBITS (AMBIENT)
+      ============================== */
+      gsap.to(".hero-orbit", {
+        y: 20,
+        x: 10,
+        rotate: 15,
+        duration: 6,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      /* =============================
+         NAV ACTIVE STATE ON SCROLL
+      ============================== */
+      document.querySelectorAll("section[id]").forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => setActive(section.id),
+          onEnterBack: () => setActive(section.id),
+        });
+      });
+
+      function setActive(id) {
+        document
+          .querySelectorAll("header nav a")
+          .forEach((a) => a.classList.remove("text-primary"));
+
+        const active = document.querySelector(`header nav a[href="#${id}"]`);
+        if (active) active.classList.add("text-primary");
+      }
     </script>
+
     <style>
       html {
         scroll-behavior: smooth;
@@ -92,8 +194,9 @@
         transform: rotateY(180deg);
       }
       .animate-on-scroll {
-        opacity: 0;
-        transform: translateY(30px);
+        /* Visible by default so content still shows even if JS/GSAP fails */
+        opacity: 1;
+        transform: translateY(0);
         transition: all 0.6s ease-out;
       }
       .animate-on-scroll.animated {
@@ -105,6 +208,7 @@
       }
       .project-card-inner {
         transition: transform 0.6s;
+        transition: border 1s;
         transform-style: preserve-3d;
       }
       .project-card:hover .project-card-inner {
@@ -116,6 +220,27 @@
       }
       .project-card-back {
         transform: rotateY(180deg);
+        border: 2.5px solid white;
+        border-radius: 0.75rem;
+      }
+      /* Parallax helpers */
+      .parallax {
+        will-change: transform;
+      }
+
+      /* Reveal defaults */
+      .reveal {
+        opacity: 0;
+        transform: translateY(60px);
+      }
+
+      /* Smooth hover depth */
+      .depth-hover {
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+      }
+      .depth-hover:hover {
+        transform: translateY(-12px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
       }
     </style>
   </head>
@@ -175,7 +300,7 @@
     <section id="home" class="min-h-screen flex items-center pt-20">
       <div class="container mx-auto px-6 py-20">
         <div class="flex flex-col md:flex-row items-center">
-          <div class="md:w-1/2 mb-12 md:mb-0 animate-on-scroll">
+          <div class="md:w-1/2 mb-12 md:mb-0 animate-on-scroll hero-content">
             <h1 class="text-4xl md:text-6xl font-bold mb-6">
               We Create
               <span class="gradient-text">Digital Experiences</span> That Matter
@@ -201,7 +326,7 @@
               </a>
             </div>
           </div>
-          <div class="md:w-1/2 animate-on-scroll">
+          <div class="md:w-1/2 animate-on-scroll hero-visual">
             <div class="relative">
               <div
                 class="w-full h-full bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-2xl overflow-hidden relative"
@@ -217,10 +342,10 @@
                 </div>
               </div>
               <div
-                class="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500/30 rounded-2xl -z-10 animate-spin-slow"
+                class="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500/30 rounded-2xl -z-10 hero-orbit"
               ></div>
               <div
-                class="absolute -top-10 -left-10 w-24 h-24 bg-primary/30 rounded-full -z-10 animate-pulse"
+                class="absolute -top-10 -left-10 w-24 h-24 bg-primary/30 rounded-full -z-10 hero-orbit parallax"
               ></div>
             </div>
           </div>
@@ -289,7 +414,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <!-- Service 1 -->
           <div
-            class="bg-gray-800/50 rounded-xl p-6 card-hover animate-on-scroll"
+            class="bg-gray-800/50 rounded-xl p-6 card-hover animate-on-scroll depth-hover reveal"
           >
             <div
               class="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center mb-6 service-icon transition-transform duration-500"
@@ -354,7 +479,7 @@
     <!-- Projects Section -->
     <section id="projects" class="py-20 bg-slate-900/50">
       <div class="container mx-auto px-6">
-        <div class="text-center mb-16 animate-on-scroll">
+        <div class="text-center mb-16 animate-on-scroll reveal">
           <h2 class="text-2xl md:text-4xl font-bold mb-4">
             Our <span class="gradient-text">Projects</span>
           </h2>
@@ -390,6 +515,112 @@
         </div>
 
         <!-- Projects Grid -->
+        <style>
+          /* Flipping card styles for hover effect */
+          .project-card {
+            perspective: 1200px;
+          }
+          .project-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            min-height: 420px;
+          }
+          .project-card:hover .project-card-inner,
+          .project-card:focus-within .project-card-inner {
+            transform: rotateY(180deg);
+          }
+          .project-card-front,
+          .project-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+          }
+          .project-card-back {
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* For smooth fade-in of content */
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 2;
+          }
+          .project-card:hover .project-card-back,
+          .project-card:focus-within .project-card-back {
+            opacity: 1;
+            transition-delay: 0.14s;
+          }
+          .project-card-front {
+            z-index: 1;
+          }
+
+          /* Gorgeous back content styles */
+          .card-back-content {
+            padding: 2.25rem 2rem 2.5rem 2rem;
+            text-align: center;
+            width: 100%;
+          }
+          .card-back-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.65rem;
+            color: #fff;
+            text-shadow: 0 2px 16px rgba(63, 41, 124, 0.16), 0 1.5px 0 #222;
+            letter-spacing: 0.01em;
+          }
+          .card-back-body {
+            color: #e7e7e8;
+            font-size: 1.075rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.65;
+            padding: 0 0.4rem;
+            font-weight: 400;
+            text-shadow: 0 1.5px 10px rgba(43, 32, 57, 0.13);
+          }
+          .project-card-back .visit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(90deg, #fff, #ece5fa 85%);
+            border-radius: 2.2rem;
+            color: #7c3aed;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.7rem 1.45rem;
+            box-shadow: 0 2px 24px 0 rgba(111, 60, 172, 0.1);
+            transition: background 0.21s, color 0.21s, box-shadow 0.18s,
+              transform 0.11s;
+            text-decoration: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-top: 0.3rem;
+            margin-bottom: 0.3rem;
+          }
+          .project-card-back .visit-btn:hover,
+          .project-card-back .visit-btn:focus {
+            background: linear-gradient(90deg, #7c3aed 10%, #5e7ff6 100%);
+            color: #fff;
+            box-shadow: 0 2px 32px 0 rgba(111, 60, 172, 0.24);
+            transform: translateY(-2px) scale(1.04);
+          }
+          .project-card-back .visit-btn svg {
+            stroke: currentColor;
+            width: 1.1em;
+            height: 1.1em;
+            vertical-align: -2px;
+          }
+        </style>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Project: Ecommerce Website 1 -->
           <div
@@ -398,7 +629,7 @@
           >
             <div class="project-card-inner h-full">
               <div
-                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
+                class="project-card-front h-full bg-gray-800/50 overflow-hidden card-hover"
               >
                 <div class="h-48 w-full overflow-hidden">
                   <img
@@ -424,22 +655,33 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Ecommerce Website 1
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Built with modern UI and responsive product listing interface
-                  for online shopping.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Ecommerce Website 1</div>
+                  <div class="card-back-body">
+                    Built with modern UI and responsive product listing
+                    interface for online shopping.
+                  </div>
                   <a
                     href="https://ecommerce-moheb.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -480,22 +722,33 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  ICICT4SD Conference Website
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Dynamic conference website for event information, schedules,
-                  and paper submissions.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">ICICT4SD Conference Website</div>
+                  <div class="card-back-body">
+                    Dynamic conference website for event information, schedules,
+                    and paper submissions.
+                  </div>
                   <a
                     href="https://icict4sd.vercel.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -534,26 +787,38 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  BUP Leave Register
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Platform to track and manage leave applications of university
-                  staff members.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">BUP Leave Register</div>
+                  <div class="card-back-body">
+                    Platform to track and manage leave applications of
+                    university staff members.
+                  </div>
                   <a
                     href="https://bup-leave-register.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
+
           <!-- Project: Netflix Clone -->
           <div
             class="project-card animate-on-scroll"
@@ -588,21 +853,34 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">Netflix Clone</h3>
-                <p class="text-white/90 mb-4">
-                  Login Demo → <strong>testmail@gmail.com</strong> /
-                  <strong>Test12345</strong>. Built for video streaming UI
-                  simulation.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Netflix Clone</div>
+                  <div class="card-back-body">
+                    Login Demo → <strong>testmail@gmail.com</strong> /
+                    <strong>Test12345</strong>. Built for video streaming UI
+                    simulation.
+                  </div>
                   <a
                     href="https://cheery-concha-df5341.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -642,22 +920,33 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Online Shoe Store
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Responsive e-commerce platform for selling shoes with cart,
-                  checkout, and modern UI.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Online Shoe Store</div>
+                  <div class="card-back-body">
+                    Responsive e-commerce platform for selling shoes with cart,
+                    checkout, and modern UI.
+                  </div>
                   <a
                     href="https://shoe-store-client-nextjs.vercel.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -698,77 +987,37 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Rising Sun School Survey
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Supabase-based survey and analytics platform for monitoring
-                  student digital behavior and addiction symptoms.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Rising Sun School Survey</div>
+                  <div class="card-back-body">
+                    Supabase-based survey and analytics platform for monitoring
+                    student digital behavior and addiction symptoms.
+                  </div>
                   <a
                     href="https://rising-sun-school-survey.netlify.app/data"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-          <!-- Project: Brazil Flag Animation -->
-          <!-- <div class="project-card animate-on-scroll" data-category="mini">
-            <div class="project-card-inner h-full">
-              <div
-                class="project-card-front h-full bg-gray-800/50 rounded-xl overflow-hidden card-hover"
-              >
-                <div class="h-48 w-full overflow-hidden">
-                  <img
-                    src="assets/img/brazil-flag.png"
-                    alt="Brazil Flag Animation"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-                <div class="p-6">
-                  <h3 class="text-xl font-bold mb-2">Brazil Flag Animation</h3>
-                  <p class="text-gray-400 mb-4">
-                    A beautiful animation of the Brazilian flag created with
-                    CSS.
-                  </p>
-                  <div class="flex justify-between items-center">
-                    <span class="text-sm text-primary">Mini Project</span>
-                    <a
-                      href="https://storied-nougat-e3540a.netlify.app/"
-                      target="_blank"
-                      class="text-sm font-medium hover:text-primary transition"
-                      >View Live</a
-                    >
-                  </div>
-                </div>
-              </div>
-              <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
-              >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Brazil Flag Animation
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Pure CSS animation showcasing the Brazilian flag with smooth
-                  transitions.
-                </p>
-                <div class="mt-auto">
-                  <a
-                    href="https://storied-nougat-e3540a.netlify.app/"
-                    target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
-                  >
-                </div>
-              </div>
-            </div>
-          </div> -->
 
           <!-- Project: Will You ? -->
           <div class="project-card animate-on-scroll" data-category="mini">
@@ -800,20 +1049,33 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">Will You ?</h3>
-                <p class="text-white/90 mb-4">
-                  A sweet and fun valentine proposal app made with HTML, CSS,
-                  and JavaScript.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Will You ?</div>
+                  <div class="card-back-body">
+                    A sweet and fun valentine proposal app made with HTML, CSS,
+                    and JavaScript.
+                  </div>
                   <a
                     href="https://bubu-dudu-valentine.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -849,21 +1111,32 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Income Expense Tracker
-                </h3>
-                <p class="text-white/90 mb-4">
-                  A financial tracker built using Vite, React, and TypeScript.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Income Expense Tracker</div>
+                  <div class="card-back-body">
+                    A financial tracker built using Vite, React, and TypeScript.
+                  </div>
                   <a
                     href="https://income-expense-tracker-vite-react-ts.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -901,22 +1174,33 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Simple Bank Functionalities
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Functional banking UI with deposit, withdraw and balance
-                  logic.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Simple Bank Functionalities</div>
+                  <div class="card-back-body">
+                    Functional banking UI with deposit, withdraw and balance
+                    logic.
+                  </div>
                   <a
                     href="https://stunning-gumdrop-bac31d.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -953,22 +1237,35 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Product Cart Functionalities
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Implements product listing and cart logic using React in
-                  Next.js.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">
+                    Product Cart Functionalities
+                  </div>
+                  <div class="card-back-body">
+                    Implements product listing and cart logic using React in
+                    Next.js.
+                  </div>
                   <a
                     href="https://product-cart-nextjs.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1006,22 +1303,35 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">
-                  Live Search Based Temparature App
-                </h3>
-                <p class="text-white/90 mb-4">
-                  Built with vanilla JS to display temperature by city name
-                  using real-time APIs.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">
+                    Live Search Based Temparature App
+                  </div>
+                  <div class="card-back-body">
+                    Built with vanilla JS to display temperature by city name
+                    using real-time APIs.
+                  </div>
                   <a
                     href="https://temparature-api.netlify.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1057,20 +1367,33 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">Todo App</h3>
-                <p class="text-white/90 mb-4">
-                  A Next.js based productivity app to add, check, and delete
-                  tasks with smooth UX.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Todo App</div>
+                  <div class="card-back-body">
+                    A Next.js based productivity app to add, check, and delete
+                    tasks with smooth UX.
+                  </div>
                   <a
                     href="https://todo-app-nextjs-self.vercel.app/"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1108,20 +1431,33 @@
                 </div>
               </div>
               <div
-                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-6 flex flex-col justify-center"
+                class="project-card-back absolute inset-0 bg-gradient-to-br from-primary to-purple-500 rounded-xl p-0 flex flex-col justify-center items-center"
               >
-                <h3 class="text-xl font-bold mb-2 text-white">Blog Website</h3>
-                <p class="text-white/90 mb-4">
-                  Feature-rich blog website with modern routing and modular
-                  design using Next.js 13.
-                </p>
-                <div class="mt-auto">
+                <div class="card-back-content">
+                  <div class="card-back-title">Blog Website</div>
+                  <div class="card-back-body">
+                    Feature-rich blog website with modern routing and modular
+                    design using Next.js 13.
+                  </div>
                   <a
                     href="https://blog-website-nextjs13-4-module12.vercel.app/Blog"
                     target="_blank"
-                    class="inline-block bg-white text-primary px-4 py-2 rounded font-medium hover:bg-gray-100 transition"
-                    >Visit Project</a
+                    class="visit-btn"
                   >
+                    Visit Project
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      viewBox="0 0 22 22"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13 5l6 6-6 6M5 11h14"
+                      ></path>
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1149,13 +1485,19 @@
             class="bg-gray-800/50 rounded-xl p-6 text-center card-hover animate-on-scroll"
           >
             <div
-              class="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center text-4xl font-bold"
+              class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center"
             >
-              SH
+              <img
+                src="assets/img/display_picture/moheb_dp.jpg"
+                alt="Saeed Hossain Moheb"
+                class="w-full h-full object-cover"
+              />
             </div>
-            <h3 class="text-xl font-bold mb-2">Saeed Hossain Moheb</h3>
+            <h3 class="text-xl font-bold mb-2 infinite-type">
+              <span id="moheb-typed"></span>
+            </h3>
             <p class="text-primary mb-4">
-              Full Stack Web Developer and SEO Expert
+              <span id="moheb-role-typed"></span>
             </p>
             <p class="text-gray-400 mb-4">
               Expert in building scalable web applications and optimizing them
@@ -1169,6 +1511,66 @@
               <i class="fab fa-linkedin mr-2"></i> Connect
             </a>
           </div>
+          <script>
+            // Infinite type animation for name and role
+            function typeEffect(element, toRotate, period, eraseDelay = 1200) {
+              let loopNum = 0;
+              let txt = "";
+              let isDeleting = false;
+              let i = 0;
+
+              function tick() {
+                let fullTxt = toRotate[loopNum % toRotate.length];
+
+                if (isDeleting) {
+                  txt = fullTxt.substring(0, txt.length - 1);
+                } else {
+                  txt = fullTxt.substring(0, txt.length + 1);
+                }
+
+                element.innerHTML = txt;
+
+                let delta = 120 - Math.random() * 30;
+
+                if (isDeleting) {
+                  delta /= 2;
+                }
+
+                if (!isDeleting && txt === fullTxt) {
+                  delta = eraseDelay;
+                  isDeleting = true;
+                } else if (isDeleting && txt === "") {
+                  isDeleting = false;
+                  loopNum++;
+                  delta = 400;
+                }
+                setTimeout(tick, delta);
+              }
+              tick();
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+              // For name
+              const mohebTyped = document.getElementById("moheb-typed");
+              if (mohebTyped) {
+                typeEffect(mohebTyped, ["Saeed Hossain Moheb"], 2000);
+              }
+              // For role (with multiple effects for infinity style)
+              const mohebRole = document.getElementById("moheb-role-typed");
+              if (mohebRole) {
+                typeEffect(
+                  mohebRole,
+                  [
+                    "Full Stack Web Developer",
+                    "SEO Expert",
+                    "Web App Builder",
+                    "JavaScript Enthusiast",
+                  ],
+                  2000
+                );
+              }
+            });
+          </script>
         </div>
       </div>
     </section>
@@ -1397,7 +1799,7 @@
         );
       });
 
-      // Scroll animation
+      // Scroll animation (basic fallback for non-GSAP environments)
       function animateOnScroll() {
         const elements = document.querySelectorAll(".animate-on-scroll");
 
@@ -1414,6 +1816,17 @@
       window.addEventListener("scroll", animateOnScroll);
       animateOnScroll(); // Run once on page load
 
+      // Ensure all content is visible even if GSAP fails
+      setTimeout(function () {
+        const allElements = document.querySelectorAll(
+          ".animate-on-scroll, .hero-content, .hero-visual"
+        );
+        allElements.forEach(function (el) {
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+        });
+      }, 100);
+
       // Add hover effect to project cards
       $(".project-card").hover(
         function () {
@@ -1425,6 +1838,190 @@
           $(this).find(".project-card-inner").css("transform", "rotateY(0deg)");
         }
       );
+
+      // =======================
+      // GSAP ANIMATIONS
+      // =======================
+      // Initialize GSAP after page loads
+      function initGSAP() {
+        if (
+          typeof gsap === "undefined" ||
+          typeof ScrollTrigger === "undefined"
+        ) {
+          console.log("GSAP not loaded, skipping animations");
+          return;
+        }
+
+        try {
+          gsap.registerPlugin(ScrollTrigger);
+
+          // Hero animations on page load
+          const heroContent = document.querySelector(".hero-content");
+          const heroVisual = document.querySelector(".hero-visual");
+          const headerEl = document.querySelector("header");
+
+          if (heroContent && heroVisual && headerEl) {
+            // Animate hero elements in
+            gsap.fromTo(
+              headerEl,
+              { y: -80, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }
+            );
+            gsap.fromTo(
+              heroContent,
+              { y: 40, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "power3.out",
+                delay: 0.2,
+              }
+            );
+            gsap.fromTo(
+              heroVisual,
+              { y: 60, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.9,
+                ease: "power3.out",
+                delay: 0.4,
+              }
+            );
+          }
+
+          // Hero parallax on scroll
+          const heroVisualEl = document.querySelector(".hero-visual");
+          if (heroVisualEl) {
+            gsap.to(heroVisualEl, {
+              yPercent: 10,
+              scrollTrigger: {
+                trigger: "#home",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1,
+              },
+            });
+          }
+
+          const heroOrbits = document.querySelectorAll(".hero-orbit");
+          if (heroOrbits.length) {
+            gsap.to(heroOrbits, {
+              yPercent: -25,
+              xPercent: 10,
+              rotate: 20,
+              scrollTrigger: {
+                trigger: "#home",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1,
+              },
+            });
+          }
+
+          // Section scroll animations - use fromTo to ensure visibility
+          document.querySelectorAll("section").forEach((section) => {
+            const elements = section.querySelectorAll(".animate-on-scroll");
+            if (!elements.length) return;
+
+            // Check if section is already in view
+            const rect = section.getBoundingClientRect();
+            const isInView = rect.top < window.innerHeight * 0.8;
+
+            elements.forEach((el, index) => {
+              if (isInView) {
+                // If already in view, animate immediately
+                gsap.fromTo(
+                  el,
+                  { opacity: 0, y: 40 },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    delay: index * 0.1,
+                  }
+                );
+              } else {
+                // Otherwise, wait for scroll trigger
+                gsap.fromTo(
+                  el,
+                  { opacity: 0, y: 40 },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    delay: index * 0.1,
+                    immediateRender: false,
+                    scrollTrigger: {
+                      trigger: section,
+                      start: "top 80%",
+                      toggleActions: "play none none reverse",
+                    },
+                  }
+                );
+              }
+            });
+          });
+
+          // Project cards animation
+          const projectCards = document.querySelectorAll(".project-card");
+          if (projectCards.length) {
+            projectCards.forEach((card) => {
+              gsap.fromTo(
+                card,
+                { opacity: 0, y: 40, scale: 0.96 },
+                {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  duration: 0.7,
+                  ease: "power2.out",
+                  immediateRender: false,
+                  scrollTrigger: {
+                    trigger: card,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse",
+                  },
+                }
+              );
+            });
+          }
+
+          // Scroll-based nav link highlight
+          const sections = document.querySelectorAll("section[id]");
+          sections.forEach((sec) => {
+            ScrollTrigger.create({
+              trigger: sec,
+              start: "top center",
+              end: "bottom center",
+              onEnter: () => setActiveNav(sec.id),
+              onEnterBack: () => setActiveNav(sec.id),
+            });
+          });
+
+          function setActiveNav(id) {
+            document
+              .querySelectorAll("header nav a")
+              .forEach((link) => link.classList.remove("text-primary"));
+            const active = document.querySelector(
+              `header nav a[href="#${id}"]`
+            );
+            if (active) active.classList.add("text-primary");
+          }
+        } catch (error) {
+          console.error("GSAP initialization error:", error);
+        }
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initGSAP);
+      } else {
+        initGSAP();
+      }
     </script>
   </body>
 </html>
